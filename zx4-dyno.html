@@ -279,23 +279,25 @@ let lastView = null;
         const hn = document.getElementById("hpData").value;
         const hpArrRaw = hp_data_sets[hn];
         const engTq = rpm_data.map((rpm, i) => (hpArrRaw[i] * 5252) / rpm);
-        // Clone Dyno torque curve for freezing (no legend entry)
+        // Clone Dyno torque curve for freezing (no legend entry), enable hover
         frozenTraces.push({
           x: rpm_data,
           y: engTq,
           mode: 'lines',
           showlegend: false,
-          hoverinfo: 'skip',
+          hoverinfo: 'x+y',
+          hovertemplate: 'RPM: %{x} RPM<br>Torque: %{y:.1f} lb-ft<extra></extra>',
           line: { color: gear_colors[0], shape: 'spline', dash: dashStyle, width: 2 },
           opacity: 0.3
         });
-        // Clone Dyno HP curve for freezing (no legend entry)
+        // Clone Dyno HP curve for freezing (no legend entry), enable hover
         frozenTraces.push({
           x: rpm_data,
           y: hpArrRaw,
           mode: 'lines',
           showlegend: false,
-          hoverinfo: 'skip',
+          hoverinfo: 'x+y',
+          hovertemplate: 'RPM: %{x} RPM<br>HP: %{y:.1f}<extra></extra>',
           line: { color: gear_colors[1], shape: 'spline', dash: dashStyle, width: 2 },
           opacity: 0.3
         });
@@ -398,12 +400,14 @@ let lastView = null;
         const xShift = frozenShiftSpeed[g];
         if (xShift != null) {
           const yLabel = Math.max(0, baseRatio - (freezeCount - 1) * stepRatio) * maxY;
-          // Compute precise intersection torque at shift RPM
-          const torqueAtShift = interp1(rpmDense, frozenWt[g], frozenShiftRpm[g]);
-          // Draw vertical line from just below label down to intersection torque
+          // Compute torque at the start of the next gear curve for frozen data
+          const speedsNextFrozen = rpmDense.map(r => rpmToSpeed(r, gear_ratios[g + 1], fdFrozen));
+          const idxNextFrozen = speedsNextFrozen.findIndex(s => s >= xShift);
+          const torqueNextFrozen = idxNextFrozen !== -1 ? frozenWt[g + 1][idxNextFrozen] : 0;
+          // Draw vertical line from just below label down to next gear start torque
           frozenConnectorTraces.push({
             x: [xShift, xShift],
-            y: [yLabel, torqueAtShift],
+            y: [yLabel, torqueNextFrozen],
             mode: 'lines',
             line: { color: gear_colors[g - 1], width: 1, dash: dashStyle },
             showlegend: false,
@@ -483,6 +487,8 @@ let lastView = null;
             y: engTq,
             mode: 'lines',
             showlegend: false,
+            hoverinfo: 'x+y',
+            hovertemplate: 'RPM: %{x} RPM<br>Torque: %{y:.1f} lb-ft<extra></extra>',
             line: { color: gear_colors[0], shape: 'spline', width: 2 }
           },
           {
@@ -490,6 +496,8 @@ let lastView = null;
             y: hpArrRaw,
             mode: 'lines',
             showlegend: false,
+            hoverinfo: 'x+y',
+            hovertemplate: 'RPM: %{x} RPM<br>HP: %{y:.1f}<extra></extra>',
             line: { color: gear_colors[1], shape: 'spline', width: 2 }
           }
         ];
@@ -632,32 +640,35 @@ let lastView = null;
         }
       }
 
-      // Scatter traces for connectors and labels (will animate)
+      // Build connector traces: vertical lines from label down to next gear torque
       const connectorTraces = [];
       for (let g = 1; g <= 5; g++) {
         const xShift = shift_speed[g];
         if (xShift != null) {
-          // Stack labels downward by 2% of y-range per freeze, starting just below top
-          const baseRatio = 0.97;
-          const stepRatio = 0.03;
-          const yLabelRatio = Math.max(0, baseRatio - freezeCount * stepRatio);
-          const yLabel = yLabelRatio * maxY;
-          // vertical line trace
+          // Compute label position
+          const baseRatio = 0.97, stepRatio = 0.03;
+          const yLabel = Math.max(0, baseRatio - freezeCount * stepRatio) * maxY;
+          // Find the first torque value of the next gear at or beyond xShift
+          const speedsNext = rpmArr.map(r => rpmToSpeed(r, gear_ratios[g + 1], fd));
+          const idxNext = speedsNext.findIndex(s => s >= xShift);
+          const torqueNext = idxNext !== -1 ? wt[g + 1][idxNext] : 0;
+          // Draw vertical line from label down to the next gear's start torque
           connectorTraces.push({
             x: [xShift, xShift],
-            y: [yLabel, wt[g][rpmArr.findIndex(r => rpmToSpeed(r, gear_ratios[g], fd) >= xShift)] ?? 0],
+            y: [yLabel, torqueNext],
             mode: 'lines',
             line: {
               color: gear_colors[g - 1],
               width: 2,
-              ...(activeDash ? { dash: activeDash } : {})
+              dash: activeDash || 'solid'
             },
             showlegend: false,
             hoverinfo: 'skip'
           });
+          // Place speed label at the top of the line
           connectorTraces.push({
             x: [xShift],
-            y: [yLabel],              // fixed offset at 95% of y-axis
+            y: [yLabel],
             mode: 'text',
             text: [`${xShift.toFixed(1)} MPH`],
             textposition: 'top center',
