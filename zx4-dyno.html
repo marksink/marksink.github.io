@@ -87,35 +87,52 @@
     const tire_circ_in  = 77.15;
     const gear_ratios   = {1:2.92, 2:2.05, 3:1.62, 4:1.33, 5:1.15, 6:1.03};
 
-    const rpm_data = [
-      3500,4000,4500,5000,5500,6000,6500,7000,7500,
-      8000,8500,9000,9500,10000,10500,11000,11500,12000,
-      12500,13000,13500,14000,14250,14500,15000,15500,16000
-    ];
-
     const hp_data_sets = {
-      Stock: [
-        12.5,15.8,17.8,19.8,22.3,24.4,26.5,28.7,31.1,
-        34.2,37.1,41.1,43.8,45.5,48.9,53.1,55.1,53.6,
-        53.6,52.3,52.4,52.2,52.1,52.3,52.4,50.8,50
-      ],
-      Tuned: [
-        13.4,16.7,18.7,21.1,23.1,25.7,28.2,30.7,33.1,
-        36.2,38.8,42.8,47.0,49.2,52.6,56.8,60.0,61.6,
-        63.5,66.1,68.6,71.1,71.7,70.4,67.8,65.2,62.6
-      ],
-      'ACME Slip-on': [
-        14.07,17.54,19.64,22.16,24.26,26.99,29.61,32.24,34.76,
-        38.01,40.74,44.94,49.35,51.66,55.23,59.64,63.00,64.68,
-        66.68,71.41,74.03,77.66,78.29,79.92,78.19,74.48,67.73
-      ]
-    };
+  Stock: [
+    3400,3500,3600,3700,3800,3900,4000,4100,4200,4300,4400,4500,4600,4700,4800,4900,5000,5100,5200,5300,5400,5500,5600,5700,5800,5900,6000,6100,6200,6300,6400,6500,6600,6700,6800,6900,7000,7100,7200,7300,7400,7500,7600,7700,7800,7900,8000,8100,8200,8300,8400,8500,8600,8700,8800,8900,9000,9100,9200,9300,9400,9500,9600,9700,9800,9900,10000,10100,10200,10300,10400,10500,10600,10700,10800,10900,11000,11100,11200,11300,11400,11500,11600,11700,11800,11900,12000,12100,12200,12300,12400,12500,12600,12700,12800,12900,13000,13100,13200,13300,13400,13500,13600,13700,13800,13900,14000,14100,14200,14300,14400,14500,14600,14700,14800,14900,15000,15100,15200,15300,15400,15500,15600,15700,15800,15900,16000
+  ].map((rpm, i) => [rpm, [
+    11.85,12.4,13.23,13.92,14.88,15.43,15.98,16.26,16.67,17.22,17.91,18.74,19.15,19.7,19.98,19.98,20.26,20.81,21.77,22.6,23.01,23.43,24.11,24.8,25.49,25.77,26.18,26.73,27.01,27.28,27.83,28.25,28.66,29.07,29.63,29.76,29.9,30.04,30.45,31.0,31.56,32.24,32.8,33.21,33.9,34.45,34.86,35.69,36.24,36.93,37.2,37.62,38.44,39.27,40.24,41.06,42.03,42.44,43.13,43.82,44.23,44.51,44.92,45.61,46.3,47.13,47.81,48.37,48.92,49.74,50.71,51.54,52.36,53.05,53.74,54.57,55.26,55.81,56.22,56.77,57.05,57.32,57.46,57.6,57.05,56.36,56.08,56.22,56.36,56.08,55.94,55.53,55.53,55.26,54.43,54.02,53.74,53.74,53.74,53.74,53.6,53.19,53.05,53.05,52.91,52.78,52.64,52.64,52.5,52.5,52.22,52.09,51.81,51.26,50.85,50.43,49.88,49.47,48.92,48.37,47.95,47.54,47.13,46.44,45.61,44.78,44.37
+  ][i]]),
+
+  Tuned: [
+    3400,3500,3600,3700,3800,3900,4000,4100,4200,4300,4400,4500,4600,4700,4800,4900,5000,5100,5200,5300,5400,5500,5600,5700,5800,5900,6000,6100,6200,6300,6400,6500,6600,6700,6800,6900,7000,7100,7200,7300,7400,7500,7600,7700,7800,7900,8000,8100,8200,8300,8400,8500,8600,8700,8800,8900,9000,9100,9200,9300,9400,9500,9600,9700,9800,9900,10000,10100,10200,10300,10400,10500,10600,10700,10800,10900,11000,11100,11200,11300,11400,11500,11600,11700,11800,11900,12000,12100,12200,12300,12400,12500,12600,12700,12800,12900,13000,13100,13200,13300,13400,13500,13600,13700,13800,13900,14000,14100,14200,14300,14400,14500,14600,14700,14800,14900,15000,15100,15200,15300,15400,15500,15600,15700,15800,15900,16000
+  ].map((rpm, i) => [rpm, [
+    12.93,13.75,14.72,15.27,15.82,16.23,16.64,17.05,17.47,17.74,18.15,18.43,18.7,19.12,19.53,20.22,20.9,21.18,21.73,22.14,22.69,23.1,23.79,24.07,24.2,24.89,25.58,26.4,26.68,27.09,27.64,28.06,28.47,29.02,29.43,29.98,30.53,31.08,31.77,32.32,33.01,33.56,34.24,35.07,35.62,36.17,36.58,37.27,37.68,38.37,39.06,39.61,40.02,40.57,41.26,42.08,42.91,44.28,45.11,45.93,46.48,47.03,47.45,47.86,48.13,48.68,49.23,50.06,50.88,51.43,52.12,53.08,53.91,54.73,55.7,56.39,57.07,57.62,58.04,58.86,59.96,60.24,60.37,60.65,61.2,61.34,61.61,62.02,62.71,63.26,63.67,64.22,64.77,65.6,65.87,66.01,66.84,67.39,67.94,68.49,68.62,69.17,69.72,70.55,71.1,71.24,71.38,71.38,71.51,71.51,71.24,70.83,70.41,70.14,69.59,69.04,68.21,67.11,66.42,65.74,65.05,64.22,63.4,62.44,61.47,60.51,59.55
+  ][i]])
+  // ,
+
+  // "ACME Slip-on": [
+  //   3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000, 7500,
+  //   8000, 8500, 9000, 9500, 10000, 10500, 11000, 11500, 12000,
+  //   12500, 13000, 13500, 14000, 14250, 14500, 15000, 15500, 16000
+  // ].map((rpm, i) => [rpm, [
+  //   14.07, 17.54, 19.64, 22.16, 24.26, 26.99, 29.61, 32.24, 34.76,
+  //   38.01, 40.74, 44.94, 49.35, 51.66, 55.23, 59.64, 63.00, 64.68,
+  //   66.68, 71.41, 74.03, 77.66, 78.29, 79.92, 78.19, 74.48, 67.73
+  // ][i]])
+  // ,
+
+  // "Ninja 400": [
+  //   3700, 3800, 3900, 4000, 4100, 4200, 4300, 4400, 4500, 4600,
+  //   4700, 4800, 4900, 5000, 5100, 5200, 5300, 5400, 5500, 5600,
+  //   5700, 5800, 5900, 6000, 6100, 6200, 6300, 6400, 6500, 6600,
+  //   6700, 6800, 6900, 7000, 7100, 7200, 7300, 7400, 7500, 7600,
+  //   7700, 7800, 7900, 8000, 8100, 8200, 8300, 8400, 8500, 8600,
+  //   8700, 8800, 8900, 9000, 9100, 9200, 9300, 9400, 9500, 9600,
+  //   9700, 9800, 9900, 10000, 10100, 10200, 10300, 10400, 10500,
+  //   10600, 10700, 10800, 10900, 11000, 11100, 11200, 11300, 11400,
+  //   11500, 11600, 11700, 11800, 11900, 12000, 12100
+  // ].map((rpm, i) => [rpm, [
+  //   13.05,14.22,15.28,16.0,17.06,17.84,18.51,19.28,19.73,20.45,21.18,21.68,22.18,22.46,22.73,23.07,23.29,23.85,24.35,24.68,25.52,26.24,26.85,27.41,27.52,27.52,27.85,28.8,30.14,30.52,31.19,31.92,32.58,33.14,33.7,34.42,35.2,35.81,36.09,36.09,36.53,37.59,38.48,39.15,39.87,40.65,40.93,41.21,41.43,41.65,42.21,42.38,42.66,42.99,43.49,43.93,44.49,44.94,45.05,45.05,45.05,45.05,45.05,45.05,44.94,44.77,44.49,44.1,43.82,43.71,43.66,43.6,43.49,43.27,43.27,43.27,43.04,42.77,42.77,42.6,42.49,42.49,42.21,41.88,41.88
+  // ][i]])
+};
+
 
     // Precompute Dyno view y-axis maximum based on max HP across all datasets
     const dynoMaxHP = (() => {
       let maxVal = 0;
       Object.values(hp_data_sets).forEach(arr => {
-        arr.forEach(v => { if (v > maxVal) maxVal = v; });
+        arr.forEach(([rpm, v]) => { if (v > maxVal) maxVal = v; });
       });
       // Round up to nearest 10
       return Math.ceil(maxVal / 10) * 10;
@@ -130,11 +147,13 @@
     // Number of interpolated data points per curve
     const densePoints = 750;
 
+    // Compute min/max RPMs from data sets
+    const rpm_data_raw = hp_data_sets[Object.keys(hp_data_sets)[0]].map(([r, _]) => r);
     // Create a dense RPM array from min to max of rpm_data
     const rpmDense = (() => {
       const arr = [];
-      const minR = rpm_data[0];
-      const maxR = rpm_data[rpm_data.length - 1];
+      const minR = rpm_data_raw[0];
+      const maxR = rpm_data_raw[rpm_data_raw.length - 1];
       for (let i = 0; i <= densePoints; i++) {
         arr.push(minR + (maxR - minR) * (i / densePoints));
       }
@@ -144,7 +163,9 @@
     // Generate dense HP datasets by interpolating original dyno data
     const hpDenseSets = {};
     for (const key in hp_data_sets) {
-      hpDenseSets[key] = rpmDense.map(r => interp1(rpm_data, hp_data_sets[key], r));
+      const rpmArrRaw = hp_data_sets[key].map(([r, hp]) => r);
+      const hpArrRaw = hp_data_sets[key].map(([r, hp]) => hp);
+      hpDenseSets[key] = rpmDense.map(r => interp1(rpmArrRaw, hpArrRaw, r));
     }
 
     // Populate HP Data dropdown with available datasets
@@ -246,14 +267,18 @@ let lastView = null;
       const all_hp = Object.values(hp_data_sets);
       const fd_ratios = [48/13, 48/14, 50/13, 50/14];
       for (const gr of Object.values(gear_ratios)) {
-        for (const hp of all_hp) {
+        for (const hpArr of all_hp) {
+          const rpmArrRaw = hpArr.map(([r, hp]) => r);
+          const hpArrRaw = hpArr.map(([r, hp]) => hp);
           for (const fd of fd_ratios) {
-            rpm_data.forEach((rpm, i) => {
+            for (let i = 0; i < rpmArrRaw.length; i++) {
+              const rpm = rpmArrRaw[i];
+              const hp = hpArrRaw[i];
               const speed = rpmToSpeed(rpm, gr, fd);
-              const tq    = (hp[i] * 5252 / rpm) * (primary_drive * gr * fd);
+              const tq    = (hp * 5252 / rpm) * (primary_drive * gr * fd);
               if (speed > maxX) maxX = speed;
               if (tq    > maxY) maxY = tq;
-            });
+            }
           }
         }
       }
@@ -281,11 +306,12 @@ let lastView = null;
         const dashStyle = freezeDashStyles[(freezeCount - 1) % freezeDashStyles.length];
         // Dyno freeze legend: DataSet name, Max HP, Max TQ
         const hn = document.getElementById("hpData").value;
-        const hpArrRaw = hp_data_sets[hn];
-        const engTq = rpm_data.map((rpm, i) => (hpArrRaw[i] * 5252) / rpm);
+        const hpArrRaw = hp_data_sets[hn].map(([r, hp]) => hp);
+        const rpmArrRaw = hp_data_sets[hn].map(([r, hp]) => r);
+        const engTq = hp_data_sets[hn].map(([rpm, hp]) => (hp * 5252) / rpm);
         // Clone Dyno torque curve for freezing (no legend entry), enable hover
         frozenTraces.push({
-          x: rpm_data,
+          x: rpmArrRaw,
           y: engTq,
           mode: 'lines',
           showlegend: false,
@@ -296,7 +322,7 @@ let lastView = null;
         });
         // Clone Dyno HP curve for freezing (no legend entry), enable hover
         frozenTraces.push({
-          x: rpm_data,
+          x: rpmArrRaw,
           y: hpArrRaw,
           mode: 'lines',
           showlegend: false,
@@ -482,12 +508,13 @@ let lastView = null;
 
       // Branch for Dyno view
       if (view === 'dyno') {
-        const hpArrRaw = hp_data_sets[hpKey];
+        const hpArrRaw = hp_data_sets[hpKey].map(([r, hp]) => hp);
+        const rpmArrRaw = hp_data_sets[hpKey].map(([r, hp]) => r);
         // Engine torque from HP = (HP * 5252 / RPM)
-        const engTq = rpm_data.map((rpm, i) => (hpArrRaw[i] * 5252) / rpm);
+        const engTq = hp_data_sets[hpKey].map(([rpm, hp]) => (hp * 5252) / rpm);
         const dynoTraces = [
           {
-            x: rpm_data,
+            x: rpmArrRaw,
             y: engTq,
             mode: 'lines',
             showlegend: false,
@@ -496,7 +523,7 @@ let lastView = null;
             line: { color: gear_colors[0], shape: 'spline', width: 2 }
           },
           {
-            x: rpm_data,
+            x: rpmArrRaw,
             y: hpArrRaw,
             mode: 'lines',
             showlegend: false,
@@ -537,7 +564,7 @@ let lastView = null;
         ];
         const dynoLayout = {
           title: 'HP and Torque',
-          xaxis: { title: 'RPM', color: 'white', autorange: false, range: [rpm_data[0], rpm_data[rpm_data.length - 1] + 2000] },
+          xaxis: { title: 'RPM', color: 'white', autorange: false, range: [rpmArrRaw[0], rpmArrRaw[rpmArrRaw.length - 1] + 2000] },
           yaxis: { title: 'HP / TQ', color: 'white', autorange: false, range: [0, dynoMaxHP] },
           plot_bgcolor: '#111',
           paper_bgcolor: '#111',
